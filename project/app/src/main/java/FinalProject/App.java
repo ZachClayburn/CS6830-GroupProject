@@ -10,8 +10,14 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import java.io.File;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    final CommandRunner commandRunner;
+    App(File projectRoot) {
+        commandRunner = new CommandRunner(projectRoot);
+    }
+
+    void run() {
+        commandRunner.runBuild();
+        commandRunner.runTests();
     }
 
     public static void main(String[] args) {
@@ -30,7 +36,7 @@ public class App {
         try {
             var res = parser.parseArgs(args);
             var testProjectDir = (File) res.get("ProjectDir");
-            System.out.println(testProjectDir.getAbsolutePath());
+            new App(testProjectDir).run();
         } catch (ArgumentParserException e) {
             parser.handleError(e);
         }
