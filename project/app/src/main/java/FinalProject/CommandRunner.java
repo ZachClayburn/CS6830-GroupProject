@@ -1,21 +1,30 @@
 package FinalProject;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.File;
 import java.io.IOException;
 
 public class CommandRunner {
     private final ProcessBuilder builder;
+    private final String gradleBinary;
 
     public CommandRunner(File workingDirectory) {
         this.builder = new ProcessBuilder().directory(workingDirectory);
+
+        if (SystemUtils.IS_OS_WINDOWS) {
+            gradleBinary = "./gradlew.bat";
+        } else {
+            gradleBinary = "./gradlew";
+        }
     }
 
     public boolean runBuild() {
-        return runCommands("./gradlew", "build");
+        return runCommands(gradleBinary, "build");
     }
 
     public boolean runTests() {
-        return runCommands("./gradlew", "test");
+        return runCommands(gradleBinary, "test");
     }
 
     private boolean runCommands(String... commands) {

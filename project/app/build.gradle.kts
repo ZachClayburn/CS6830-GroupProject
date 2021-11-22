@@ -23,6 +23,9 @@ dependencies {
     // This dependency is used by the application.
     implementation("com.google.guava:guava:30.1.1-jre")
     implementation("net.sourceforge.argparse4j:argparse4j:0.9.0")
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+
     testImplementation("com.github.javaparser", "javaparser-symbol-solver-core", "3.23.1")
 }
 

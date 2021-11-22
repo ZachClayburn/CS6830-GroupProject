@@ -17,7 +17,8 @@ public class App {
 
     void run() {
         commandRunner.runBuild();
-        commandRunner.runTests();
+
+//        commandRunner.runTests();
     }
 
     public static void main(String[] args) {
