@@ -25,6 +25,10 @@ public class CommandRunner {
         return runCommands("build");
     }
 
+    public boolean runJar() {
+        return runCommands("jar");
+    }
+
     public boolean runTests() {
         return runCommands("test");
     }
