@@ -4,6 +4,8 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandRunner {
     private final ProcessBuilder builder;
@@ -20,16 +22,17 @@ public class CommandRunner {
     }
 
     public boolean runBuild() {
-        return runCommands(gradleBinary, "build");
+        return runCommands("build");
     }
 
     public boolean runTests() {
-        return runCommands(gradleBinary, "test");
+        return runCommands("test");
     }
 
     private boolean runCommands(String... commands) {
         try {
-            var process = builder.command(commands).start();
+            builder.command(gradleBinary).command().addAll(List.of(commands));
+            var process = builder.start();
             process.waitFor();
             return process.exitValue() == 0;
         } catch (InterruptedException e) {
