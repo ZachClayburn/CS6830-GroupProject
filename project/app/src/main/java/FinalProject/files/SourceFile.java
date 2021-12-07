@@ -1,21 +1,19 @@
 package FinalProject.files;
 
-import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.io.*;
+import java.nio.file.Paths;
 
 
-public class SourceFile {
+public class SourceFile implements Cloneable {
     private final File filePath;
-    private final CompilationUnit unalteredFileContents;
-    private CompilationUnit fileContents;
+    private  CompilationUnit fileContents;
 
-    SourceFile(File filePath) throws FileNotFoundException {
+    SourceFile(File filePath, CompilationUnit fileContents) {
         this.filePath = filePath;
-        unalteredFileContents = StaticJavaParser.parse(filePath);
-        fileContents = unalteredFileContents.clone();
+        this.fileContents = fileContents;
     }
 
     public void writeBackFile() throws IOException {
@@ -29,7 +27,14 @@ public class SourceFile {
         return fileContents;
     }
 
-    public void resetFile() {
-        fileContents = unalteredFileContents.clone();
+    @Override
+    public SourceFile clone() {
+        try {
+            SourceFile clone = (SourceFile) super.clone();
+            clone.fileContents = fileContents.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

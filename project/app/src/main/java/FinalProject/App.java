@@ -3,26 +3,40 @@
  */
 package FinalProject;
 
-import FinalProject.files.SourceFiles;
+import FinalProject.files.SourceFile;
+import FinalProject.files.SourceSet;
+import FinalProject.patcher.Patch;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class App {
+public class App implements Closeable {
     final CommandRunner commandRunner;
+    final SourceSet sourceSet;
+    List<Patch> population = new ArrayList<>();
+
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
-        SourceFiles.setupSymbolSolver(projectRoot.toPath());
+        SourceSet.setupSymbolSolver(projectRoot.toPath());
+        sourceSet = SourceSet.fromProjectDirectory(projectRoot.toPath());
     }
 
     void run() {
         commandRunner.runBuild();
 
 //        commandRunner.runTests();
+    }
+
+    @Override
+    public void close() throws IOException {
+        sourceSet.close();
     }
 
     public static void main(String[] args) {
@@ -38,15 +52,22 @@ public class App {
                               .verifyIsDirectory())
                 .help("Root directory of the project to apply automatic an automatic repair")
                 .metavar("<Project root>");
+        File testProjectDir = null;
         try {
             var res = parser.parseArgs(args);
-            var testProjectDir = (File) res.get("ProjectDir");
-            new App(testProjectDir).run();
+            testProjectDir = res.get("ProjectDir");
         } catch (ArgumentParserException e) {
             parser.handleError(e);
-        } catch (IOException e) {
+        }
+
+        try (var app = new App(testProjectDir)) {
+            app.run();
+        }
+        catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
+
     }
+
 }
