@@ -3,7 +3,9 @@
  */
 package FinalProject;
 
+import FinalProject.exceptions.FaultLocalizationException;
 import FinalProject.files.SourceFiles;
+import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -13,16 +15,24 @@ import java.io.IOException;
 
 public class App {
     final CommandRunner commandRunner;
+    final TarantulaFaultLocalizer tarantulaFaultLocalizer;
+
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
+        tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
+
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
         SourceFiles.setupSymbolSolver(projectRoot.toPath());
     }
 
     void run() {
         commandRunner.runBuild();
-
-//        commandRunner.runTests();
+        try {
+            tarantulaFaultLocalizer.localizeFaults();
+        } catch (FaultLocalizationException fle) {
+            fle.printStackTrace();
+            System.exit(1);
+        }
     }
 
     public static void main(String[] args) {
