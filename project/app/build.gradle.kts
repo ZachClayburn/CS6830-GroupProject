@@ -26,6 +26,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
+    implementation("org.javatuples", "javatuples", "1.2")
     implementation("com.github.javaparser", "javaparser-symbol-solver-core", "3.23.1")
 }
 

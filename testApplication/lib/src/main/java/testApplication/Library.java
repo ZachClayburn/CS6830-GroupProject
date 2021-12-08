@@ -4,7 +4,14 @@
 package testApplication;
 
 public class Library {
+
     public boolean someLibraryMethod() {
-        return true;
+        Integer value = null;
+        boolean success = true;
+        int a = 5;
+        int b = 10;
+        int c = 15;
+        success = (value == c);
+        return success;
     }
 }
