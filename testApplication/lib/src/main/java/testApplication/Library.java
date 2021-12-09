@@ -38,14 +38,14 @@ public class Library {
         int a = 13;
         int b = 7;
         // should be a * b
-        return a + b == 91
+        return a + b == 91;
     }
 
     public boolean boolError() {
         int a = 5;
         int b = 3;
         // should be a | b
-        return (a & b) == 7
+        return (a & b) == 7;
     }
 
     public boolean deleteLineError() {
@@ -58,12 +58,12 @@ public class Library {
     }
 
     public boolean ifElseIfError() {
-        bool result = false;
-        if true {
+        boolean result = false;
+        if (true) {
             result = !result;
         }
         // Should not flip result again
-        if true {
+        if (true) {
             result = !result;
         }
         return result;
