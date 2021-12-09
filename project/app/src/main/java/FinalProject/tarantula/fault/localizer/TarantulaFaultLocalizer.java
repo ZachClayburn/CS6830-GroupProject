@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 public class TarantulaFaultLocalizer {
     private List<Path> testPaths;
-    private CommandRunner commandRunner;
+    private final CommandRunner commandRunner;
 
     public TarantulaFaultLocalizer(File projectDirectory, CommandRunner commandRunner) {
         this.commandRunner = commandRunner;
@@ -86,7 +86,8 @@ public class TarantulaFaultLocalizer {
 
             for (MethodDeclaration testMethod : testMethods) {
                 String testMethodName = testMethod.getNameAsString();
-                var x = commandRunner.runTestMethod(testClassName, testMethodName);
+                boolean testPassed = commandRunner.runTestMethod(testClassName, testMethodName);
+
                 System.out.println();
             }
 

@@ -4,7 +4,6 @@
 package FinalProject;
 
 import FinalProject.exceptions.FaultLocalizationException;
-import FinalProject.files.SourceFiles;
 import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import FinalProject.files.SourceFile;
 import FinalProject.files.SourceSet;
@@ -22,6 +21,8 @@ import java.util.List;
 public class App implements Closeable {
     final CommandRunner commandRunner;
     final TarantulaFaultLocalizer tarantulaFaultLocalizer;
+    final SourceSet sourceSet;
+    List<Patch> population = new ArrayList<>();
 
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
