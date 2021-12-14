@@ -111,7 +111,7 @@ public class LibraryComplex {
         }
     }
 
-    public boolean deleteLineError_1() {
+    public boolean deleteLineError_1(int t) {
         t = t % 6;
         int a = 2;
         int b = 3;
