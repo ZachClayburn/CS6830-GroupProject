@@ -31,6 +31,11 @@ class LibraryTestSimple {
         assertTrue(classUnderTest.bitwiseError_1(), "boolError should return 'true'");
         fail();
     }
+    @Test void negationError_1() {
+        LibrarySimple classUnderTest = new LibrarySimple();
+        assertTrue(classUnderTest.negationError_1(), "deleteLineError should return 'true'");
+        fail();
+    }
     @Test void deleteLineError_1() {
         LibrarySimple classUnderTest = new LibrarySimple();
         assertTrue(classUnderTest.deleteLineError_1(), "deleteLineError should return 'true'");
