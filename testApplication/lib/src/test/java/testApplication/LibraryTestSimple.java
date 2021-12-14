@@ -9,7 +9,7 @@ package testApplication;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class LibraryTest {
+class LibraryTestSimple {
     @Test void nullError_1() {
         LibrarySimple classUnderTest = new LibrarySimple();
         assertEquals("3", classUnderTest.nullError_1(3), "nullError should return 'true'");
