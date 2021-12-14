@@ -5,21 +5,28 @@ package FinalProject;
 
 import FinalProject.files.SourceFile;
 import FinalProject.files.SourceSet;
+import FinalProject.patcher.FixTemplates;
+import FinalProject.patcher.IFixTemplate;
 import FinalProject.patcher.Patch;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
     final SourceSet sourceSet;
-    List<Patch> population = new ArrayList<>();
+    String testName = null;
+    List<IFixTemplate> fixTemplates = FixTemplates.getPatches();
 
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
@@ -30,8 +37,34 @@ public class App implements Closeable {
 
     void run() {
         commandRunner.runBuild();
-
 //        commandRunner.runTests();
+    }
+
+    boolean tryNode(Node node, File fileName) {
+        for (IFixTemplate template : fixTemplates) {
+            var fix = template.generateFixes(node, fileName);
+            if (fix == null) continue;
+            try {
+                fix.writeBackFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            // build failed, not a valid patch
+            if (!commandRunner.runBuild()) continue;
+            var testResults = testName == null ? commandRunner.runTests() : commandRunner.runSpecificTest(testName);
+            if (testResults) return true;
+        }
+        return false;
+    }
+
+    void run(File filePath) throws FileNotFoundException {
+        var optFixFile = sourceSet.get(filePath);
+        if (optFixFile.isEmpty()) {
+            throw new FileNotFoundException("Cannot find " + filePath);
+        }
+        var fixFile = optFixFile.get();
+        var fileContents = fixFile.getFileContents();
+        fileContents.stream().map(node -> tryNode(node, filePath)).filter(n -> n).findFirst();
     }
 
     @Override
@@ -39,31 +72,36 @@ public class App implements Closeable {
         sourceSet.close();
     }
 
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
     public static void main(String[] args) {
-        var parser = ArgumentParsers
-                .newFor("Par")
-                .build()
-                .description("Automatic program repair");
-        parser
-                .addArgument("ProjectDir")
-                .required(true)
-                .type(Arguments
-                              .fileType()
-                              .verifyIsDirectory())
-                .help("Root directory of the project to apply automatic an automatic repair")
-                .metavar("<Project root>");
+        var parser = ArgumentParsers.newFor("Par").build().description("Automatic program repair");
+        parser.addArgument("ProjectDir")
+              .required(true)
+              .type(Arguments.fileType().verifyIsDirectory())
+              .help("Root directory of the project to apply automatic an automatic repair")
+              .metavar("<Project root>");
+        parser.addArgument("--fix-file").type(Arguments.fileType().verifyIsFile());
+        parser.addArgument("--test-name");
         File testProjectDir = null;
+        File testFile = null;
+        String testName = null;
         try {
             var res = parser.parseArgs(args);
             testProjectDir = res.get("ProjectDir");
+            testFile = res.get("fix_file");
+            testName = res.get("test_name");
         } catch (ArgumentParserException e) {
             parser.handleError(e);
         }
 
         try (var app = new App(testProjectDir)) {
-            app.run();
-        }
-        catch (IOException e) {
+            app.setTestName(testName);
+            if (testFile == null) app.run();
+            else app.run(testFile);
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
