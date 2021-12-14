@@ -11,7 +11,7 @@ public class SourceFile implements Cloneable {
     private final File filePath;
     private  CompilationUnit fileContents;
 
-    SourceFile(File filePath, CompilationUnit fileContents) {
+    public SourceFile(File filePath, CompilationUnit fileContents) {
         this.filePath = filePath;
         this.fileContents = fileContents;
     }
