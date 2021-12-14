@@ -26,4 +26,8 @@ public class UnalteredFile {
         }
     }
 
+    public boolean matches(File file) {
+        return filePath.getAbsoluteFile().equals(file.getAbsoluteFile());
+    }
+
 }

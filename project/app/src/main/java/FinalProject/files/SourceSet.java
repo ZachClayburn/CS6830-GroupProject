@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A collection of source files to mutate. This class manages all the source files in a project that the APR algorithm
@@ -43,6 +44,10 @@ public class SourceSet implements Closeable {
     @Override
     public void close() throws IOException {
         restoreToDefault();
+    }
+
+    public Optional<SourceFile> get(File file) {
+        return sourceFiles.stream().filter(uf -> uf.matches(file)).findFirst().map(UnalteredFile::getMutableCopy);
     }
 
     public static void setupSymbolSolver(Path projectRoot) throws IOException {

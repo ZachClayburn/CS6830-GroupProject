@@ -33,6 +33,10 @@ public class CommandRunner {
         return runCommands("test");
     }
 
+    public boolean runSpecificTest(String testName) {
+        return runCommands("test", "--tests", testName);
+    }
+
     private boolean runCommands(String... commands) {
         try {
             builder.command(gradleBinary).command().addAll(List.of(commands));
