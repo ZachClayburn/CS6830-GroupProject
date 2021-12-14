@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LibraryTestSimple {
     @Test void nullError_1() {
         LibrarySimple classUnderTest = new LibrarySimple();
-        assertEquals("3", classUnderTest.nullError_1(3), "nullError should return 'true'");
+        assertEquals("3", classUnderTest.nullError_1(Integer.valueOf(3)), "nullError should return 'true'");
         assertEquals("", classUnderTest.nullError_1(null), "nullError should return 'true'");
         fail();
     }
@@ -50,7 +50,7 @@ class LibraryTestSimple {
 //        Library classUnderTest = new Library();
 //        assertTrue(classUnderTest.ifElseIfError_1(), "ifElseIfError should return 'true'");
 //        fail();
-    }
+//    }
 
 
 

@@ -7,7 +7,7 @@ package testApplication;
 
 public class LibraryComplex {
 
-    public String nullError_1(Interger number) {
+    public String nullError_1(Integer number) {
         // The solution should be the following:
         // String success = new String();
         // if (number != number){
@@ -49,7 +49,7 @@ public class LibraryComplex {
         t = t % 4;
         int a = 13;
         int b = 7;
-        int c;
+        int c = 0;
         if (t == 0){
             // should be a * b
             c = a - b;
@@ -69,9 +69,10 @@ public class LibraryComplex {
     }
 
     public boolean bitwiseError_1(int t) {
-        t = t % 3
+        t = t % 3;
         int a = 5;
         int b = 3;
+        int c = 0;
         if (t == 0){
             // should be a | b
             c = (a & b);
@@ -91,6 +92,7 @@ public class LibraryComplex {
         // fluff code
         int a = t % 9;
         int b = 11;
+        int c = 0;
         c = (b - a) * 3;
         if (a < 0){
             String s = "This line should never run...";
@@ -102,7 +104,7 @@ public class LibraryComplex {
             // should be  !x.  The above line is the correct place to fix
             return true;
         }
-        else if (d) {
+        else if (d != 0) {
             // !d is an incorrect fix.  Sometimes it will pass tests and sometimes fail
             return true;
         }
@@ -111,7 +113,7 @@ public class LibraryComplex {
         }
     }
 
-    public boolean deleteLineError_1() {
+    public boolean deleteLineError_1(int t) {
         t = t % 6;
         int a = 2;
         int b = 3;
@@ -143,6 +145,7 @@ public class LibraryComplex {
             d = a - b;
             return c == 5;
         }
+        return false; // No idea what was supposed to be returned here, but it cannot reach the end of the function without a return
     }
 
 }

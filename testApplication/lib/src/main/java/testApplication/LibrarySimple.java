@@ -19,7 +19,7 @@ package testApplication;
 
 public class LibrarySimple {
 
-    public String nullError_1(Interger number) {
+    public String nullError_1(Integer number) {
         // The solution should be the following:
         // String success = new String();
         // if (number != number){
