@@ -44,26 +44,66 @@ public class LibraryComplex {
         return c;
     }
 
-    public boolean arithmeticError_1() {
+    public boolean arithmeticError_1(int t) {
+        // This test will fail if t%4 != 0
+        t = t % 4;
         int a = 13;
         int b = 7;
-        // should be a * b
-        int c = a + b;
+        int c;
+        if (t == 0){
+            // should be a * b
+            c = a - b;
+        }
+        else if (t == 1){
+            c = a * b;
+        }
+        else if (t == 2){
+            // should be a * b
+            c = a / b;
+        }
+        else if (t == 3){
+            // should be a * b
+            c = a + b;
+        }
         return c == 91;
     }
 
-    public boolean bitwiseError_1() {
+    public boolean bitwiseError_1(int t) {
+        t = t % 3
         int a = 5;
         int b = 3;
-        // should be a | b
-        int c = (a & b);
+        if (t == 0){
+            // should be a | b
+            c = (a & b);
+        }
+        else if (t == 1){
+            c = a | b;
+
+        }
+        else if (t == 2){
+            c = a | b;
+
+        }
         return c == 7;
     }
 
-    public boolean negationError_1(){
+    public boolean negationError_1(int t){
+        // fluff code
+        int a = t % 9;
+        int b = 11;
+        c = (b - a) * 3;
+        if (a < 0){
+            String s = "This line should never run...";
+        }
+        // Fix below
+        int d = c % 2;
         boolean x = false;
-        // should be  !x
-        if (x) {
+        if (x){
+            // should be  !x.  The above line is the correct place to fix
+            return true;
+        }
+        else if (d) {
+            // !d is an incorrect fix.  Sometimes it will pass tests and sometimes fail
             return true;
         }
         else {
@@ -72,12 +112,37 @@ public class LibraryComplex {
     }
 
     public boolean deleteLineError_1() {
+        t = t % 6;
         int a = 2;
         int b = 3;
         int c = 5;
-        // Should delete next line
-        c += a + b;
-        return c == 5;
+        int d;
+        if ( t == 0){
+            // Should delete next line
+            c += a + b;
+            return c == 5;
+        }
+        // other false lines that if deleted don't fix code
+        else if ( t == 1 ){
+            d = a + b;
+            return c == 5;
+        }
+        else if ( t == 2 ){
+            d = a + b;
+            return c == 5;
+        }
+        else if ( t == 3 ){
+            d = a * b;
+            return c == 5;
+        }
+        else if ( t == 4 ){
+            d = a / b;
+            return c == 5;
+        }
+        else if ( t == 5 ){
+            d = a - b;
+            return c == 5;
+        }
     }
 
 }

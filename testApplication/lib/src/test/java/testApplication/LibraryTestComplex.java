@@ -27,17 +27,40 @@ class LibraryTestComplex {
     }
     @Test void arithmeticError_1() {
         LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.arithmeticError_1(), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError_1(1), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError_1(2), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError_1(3), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError_1(4), "arithmeticError should return 'true'");
         fail();
     }
     @Test void bitwiseError_1() {
         LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.bitwiseError_1(), "boolError should return 'true'");
+        assertTrue(classUnderTest.bitwiseError_1(1), "boolError should return 'true'");
+        assertTrue(classUnderTest.bitwiseError_1(2), "boolError should return 'true'");
+        assertTrue(classUnderTest.bitwiseError_1(3), "boolError should return 'true'");
+        fail();
+    }
+    @Test void negationError_1() {
+        LibraryComplex classUnderTest = new LibraryComplex();
+        assertTrue(classUnderTest.negationError_1(1), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(2), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(3), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(4), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(5), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(6), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(7), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(8), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError_1(9), "deleteLineError should return 'true'");
         fail();
     }
     @Test void deleteLineError_1() {
         LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.deleteLineError_1(), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(1), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(2), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(3), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(4), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(5), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError_1(6), "deleteLineError should return 'true'");
         fail();
     }
 
