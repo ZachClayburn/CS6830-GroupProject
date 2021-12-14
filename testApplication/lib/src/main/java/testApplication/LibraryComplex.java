@@ -18,6 +18,8 @@ public class LibraryComplex {
     }
 
     public boolean compareError_1(int t) {
+        // This function is contrived to fail whenever t%5 == 0.
+        // There are 5 tests in LibraryTestComplex
         t = t % 5;
         int a = 3;
         int b = 4;
