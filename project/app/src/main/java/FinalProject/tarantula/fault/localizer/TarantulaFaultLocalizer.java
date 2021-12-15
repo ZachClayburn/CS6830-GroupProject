@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TarantulaFaultLocalizer {
@@ -41,7 +42,7 @@ public class TarantulaFaultLocalizer {
         try {
             testPaths = new ArrayList<>();
             try (Stream<Path> stream = Files.walk(projectDirectory.toPath())) {
-                List<Path> filePaths = stream.toList();
+                List<Path> filePaths = stream.collect(Collectors.toList());
                 for (Path filePath : filePaths) {
                     if (filePath.toString().contains(".java") && filePath.toString().contains("Test")) {
                         testPaths.add(filePath);
@@ -96,7 +97,7 @@ public class TarantulaFaultLocalizer {
     private JacocoReport getCoverageReport() throws FaultLocalizationException {
         try {
             List<Path> paths = Files.find(Paths.get(projectDirectory.getAbsolutePath()), 16,
-                    (path, attr) -> path.endsWith("jacocoTestReport.xml")).toList();
+                    (path, attr) -> path.endsWith("jacocoTestReport.xml")).collect(Collectors.toList());
 
             if (paths.size() != 1) {
                 throw new FaultLocalizationException("Error: multiple jacoco test reports found or is missing");
