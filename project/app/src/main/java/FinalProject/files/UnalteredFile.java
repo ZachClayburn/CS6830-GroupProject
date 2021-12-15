@@ -22,7 +22,7 @@ public class UnalteredFile {
     public void restoreFile() throws IOException {
         LexicalPreservingPrinter.setup(fileContents);
         try (var writer = new PrintWriter(new FileWriter(filePath))) {
-            writer.print(fileContents);
+            writer.print(LexicalPreservingPrinter.print(fileContents));
         }
     }
 
