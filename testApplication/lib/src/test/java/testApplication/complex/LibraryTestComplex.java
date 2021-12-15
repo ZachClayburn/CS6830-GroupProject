@@ -4,9 +4,10 @@
  *  Ian Rodriguez and Nathanael Smith -- December 13
  */
 
-package testApplication;
+package testApplication.complex;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTestComplex {

@@ -5,7 +5,7 @@
  *  Nathanael Smith -- December 14
  */
 
-package testApplication;
+package testApplication.simple;
 
 public class Simple {
 

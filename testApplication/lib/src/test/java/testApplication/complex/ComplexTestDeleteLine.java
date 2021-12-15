@@ -1,6 +1,7 @@
-package testApplication;
+package testApplication.complex;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 // Single point of failure

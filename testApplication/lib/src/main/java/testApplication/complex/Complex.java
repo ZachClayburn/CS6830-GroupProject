@@ -3,7 +3,7 @@
  *  Nathanael Smith -- December 14
  */
 
-package testApplication;
+package testApplication.complex;
 
 public class Complex {
 
