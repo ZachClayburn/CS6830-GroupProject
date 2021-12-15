@@ -3,6 +3,8 @@
  */
 package FinalProject;
 
+import FinalProject.exceptions.FaultLocalizationException;
+import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import FinalProject.files.SourceFile;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
@@ -24,12 +26,15 @@ import java.util.Objects;
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
+    final TarantulaFaultLocalizer tarantulaFaultLocalizer;
     final SourceSet sourceSet;
     String testName = null;
     List<IFixTemplate> fixTemplates = FixTemplates.getPatches();
 
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
+        tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
+
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
         SourceSet.setupSymbolSolver(projectRoot.toPath());
         sourceSet = SourceSet.fromProjectDirectory(projectRoot.toPath());
@@ -37,7 +42,12 @@ public class App implements Closeable {
 
     void run() {
         commandRunner.runBuild();
-//        commandRunner.runTests();
+        try {
+            tarantulaFaultLocalizer.localizeFaults();
+        } catch (FaultLocalizationException fle) {
+            fle.printStackTrace();
+            System.exit(1);
+        }
     }
 
     boolean tryNode(Node node, File fileName) {
