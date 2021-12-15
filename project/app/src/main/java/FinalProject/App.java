@@ -4,6 +4,7 @@
 package FinalProject;
 
 import FinalProject.ast.helpers.LineASTHelper;
+import FinalProject.oracle.fault.localizer.OracleFaultLocalizer;
 import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
@@ -15,14 +16,19 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
     final File modifiedFile;
+    final File projectRootDirectory;
     final TarantulaFaultLocalizer tarantulaFaultLocalizer;
     final SourceSet sourceSet;
     String testName = null;
@@ -30,8 +36,9 @@ public class App implements Closeable {
 
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
+        this.projectRootDirectory = projectRoot;
         modifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple.java")
-                            .toFile();
+                .toFile();
         tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
 
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
@@ -39,26 +46,33 @@ public class App implements Closeable {
         sourceSet = SourceSet.fromProjectDirectory(projectRoot.toPath());
     }
 
-    List<File> testFilePlaceHolder() {
-        return new ArrayList<>();
+    List<Path> getSimpleTestPaths() {
+        List<Path> testPaths = new ArrayList<>();
+        try (Stream<Path> stream = Files.walk(projectRootDirectory.toPath())) {
+            List<Path> filePaths = stream.collect(Collectors.toList());
+            for (Path filePath : filePaths) {
+                if (filePath.toString().contains(".java") && filePath.toString().contains("Test")
+                        && filePath.toString().contains("Simple")) {
+                    testPaths.add(filePath);
+                }
+            }
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            System.exit(1);
+        }
+        return testPaths;
     }
 
-    long oraclePlaceholder(File f) {
-        return 0;
+    void diffPrinterPlaceholder() {
     }
-
-    String testClassPlaceHolder(File f) {
-        return "";
-    }
-
-    void diffPrinterPlaceholder() {}
 
     void run() {
         commandRunner.runBuild();
         try {
-            for (File file : testFilePlaceHolder()) {
-                var lineNumber = oraclePlaceholder(file);
-                var testClassName = testClassPlaceHolder(file);
+            for (Path path : getSimpleTestPaths()) {
+                File file = path.toFile();
+                long lineNumber = OracleFaultLocalizer.localizeFaults(file);
+                String testClassName = file.getName().replace(".java", "");
                 var node = LineASTHelper.getLineAST(modifiedFile, lineNumber);
                 for (IFixTemplate template : fixTemplates) {
                     if (!template.checkNode(node)) continue;
@@ -126,10 +140,10 @@ public class App implements Closeable {
     public static void main(String[] args) {
         var parser = ArgumentParsers.newFor("Par").build().description("Automatic program repair");
         parser.addArgument("ProjectDir")
-              .required(true)
-              .type(Arguments.fileType().verifyIsDirectory())
-              .help("Root directory of the project to apply automatic an automatic repair")
-              .metavar("<Project root>");
+                .required(true)
+                .type(Arguments.fileType().verifyIsDirectory())
+                .help("Root directory of the project to apply automatic an automatic repair")
+                .metavar("<Project root>");
         parser.addArgument("--fix-file").type(Arguments.fileType().verifyIsFile());
         parser.addArgument("--test-name");
         File testProjectDir = null;
