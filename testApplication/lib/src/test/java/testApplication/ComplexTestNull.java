@@ -9,13 +9,13 @@ class ComplexTestNull {
     // The second assert will fail by returning false
     @Test
     void nullError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
+        Complex classUnderTest = new Complex();
         assertEquals("3", classUnderTest.nullError(3), "nullError should return 'true'");
     }
 
     @Test
     void nullError_2() {
-        LibraryComplex classUnderTest = new LibraryComplex();
+        Complex classUnderTest = new Complex();
         assertEquals("", classUnderTest.nullError(null), "nullError should return 'true'");
     }
 

@@ -5,7 +5,7 @@
 
 package testApplication;
 
-public class LibraryComplex {
+public class Complex {
 
     // One point of failure
     public String nullError(Integer number) {
@@ -119,7 +119,7 @@ public class LibraryComplex {
             String s = "This line should never run...";
         }
         // Fix below
-        int d = (c % 2) == 0 ? false : true;
+        boolean d = (c % 2) == 0 ? false : true;
         boolean x = false;
         // BUG ON NEXT LINE
         if (x){

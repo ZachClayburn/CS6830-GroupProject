@@ -7,7 +7,7 @@
 
 package testApplication;
 
-public class LibrarySimple {
+public class Simple {
 
     public String nullError(Integer number) {
         // The solution should be the following:

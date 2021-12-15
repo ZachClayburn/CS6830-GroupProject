@@ -7,17 +7,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class ComplexTestBitwise {
     // Asserts with inputs 1-2 will pass by returning true
     // Assert with input 3 will fail by returning fail
-    @Test void bitwiseError() {
+    @Test void bitwiseError_1() {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(1), "boolError should return 'true'");
     }
 
-    @Test void bitwiseError() {
+    @Test void bitwiseError_2() {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(2), "boolError should return 'true'");
     }
 
-    @Test void bitwiseError() {
+    @Test void bitwiseError_3() {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(3), "boolError should return 'true'");
     }
