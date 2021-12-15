@@ -25,6 +25,8 @@ dependencies {
     implementation("net.sourceforge.argparse4j:argparse4j:0.9.0")
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation("org.apache.commons:commons-lang3:3.12.0")
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0")
 
     implementation("org.javatuples", "javatuples", "1.2")
     implementation("com.github.javaparser", "javaparser-symbol-solver-core", "3.23.1")
