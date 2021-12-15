@@ -12,12 +12,10 @@ class ComplexTestBitwise {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(1), "boolError should return 'true'");
     }
-
     @Test void bitwiseError_2() {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(2), "boolError should return 'true'");
     }
-
     @Test void bitwiseError_3() {
         Complex classUnderTest = new Complex();
         assertTrue(classUnderTest.bitwiseError(3), "boolError should return 'true'");

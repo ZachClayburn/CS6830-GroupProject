@@ -13,7 +13,6 @@ class ComplexTestNull {
         Complex classUnderTest = new Complex();
         assertEquals("3", classUnderTest.nullError(3), "nullError should return 'true'");
     }
-
     @Test
     void nullError_2() {
         Complex classUnderTest = new Complex();
