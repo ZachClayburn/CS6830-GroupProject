@@ -36,6 +36,10 @@ public class CommandRunner {
     public boolean runTestMethod(String testClassName, String testMethodName) {
         return runCommands("cleanTest", "test", "--tests", testClassName + "." + testMethodName);
     }
+  
+    public boolean runSpecificTest(String testName) {
+        return runCommands("test", "--tests", testName);
+    }
 
     private boolean runCommands(String... commands) {
         try {
