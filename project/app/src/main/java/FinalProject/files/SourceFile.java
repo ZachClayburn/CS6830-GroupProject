@@ -1,15 +1,15 @@
 package FinalProject.files;
 
+import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.io.*;
-import java.nio.file.Paths;
 
 
 public class SourceFile implements Cloneable {
     private final File filePath;
-    private  CompilationUnit fileContents;
+    private CompilationUnit fileContents;
 
     public SourceFile(File filePath, CompilationUnit fileContents) {
         this.filePath = filePath;

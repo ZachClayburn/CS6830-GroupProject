@@ -3,15 +3,14 @@
  */
 package FinalProject;
 
-import FinalProject.exceptions.FaultLocalizationException;
+import FinalProject.ast.helpers.LineASTHelper;
 import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
-import FinalProject.files.SourceFile;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
 import FinalProject.patcher.IFixTemplate;
-import FinalProject.patcher.Patch;
-import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.stmt.Statement;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -22,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
@@ -42,12 +41,17 @@ public class App implements Closeable {
 
     void run() {
         commandRunner.runBuild();
-        try {
-            tarantulaFaultLocalizer.localizeFaults();
-        } catch (FaultLocalizationException fle) {
-            fle.printStackTrace();
-            System.exit(1);
-        }
+//        try {
+//            var x = LineASTHelper.getLineAST(new File(""), 34);
+//            ArrayList<Statement> statements = new ArrayList<>();
+//            statements.add(StaticJavaParser.parseStatement("c = a + b;"));
+//            statements.add(StaticJavaParser.parseStatement("String s = \"test\";"));
+//            LineASTHelper.writeASTLinesToFile(new File(""), statements, 34);
+//            System.out.println(x.toString());
+//        } catch (IOException ioException) {
+//            ioException.printStackTrace();
+//            System.exit(1);
+//        }
     }
 
     boolean tryNode(Node node, File fileName) {
