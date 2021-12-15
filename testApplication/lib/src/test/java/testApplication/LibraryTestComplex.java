@@ -10,58 +10,60 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTestComplex {
-    @Test void nullError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertEquals("3", classUnderTest.nullError_1(3), "nullError should return 'true'");
-        assertEquals("", classUnderTest.nullError_1(null), "nullError should return 'true'");
-        fail();
+    @Test void nullError() {
+        // The first assert will pass by returning true
+        // The second assert will fail by returning false
+        Complex classUnderTest = new Complex();
+        assertEquals("3", classUnderTest.nullError(3), "nullError should return 'true'");
+        assertEquals("", classUnderTest.nullError(null), "nullError should return 'true'");
     }
-    @Test void compareError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.compareError_1(1), "compareError should return 'true'");
-        assertTrue(classUnderTest.compareError_1(2), "compareError should return 'true'");
-        assertTrue(classUnderTest.compareError_1(3), "compareError should return 'true'");
-        assertTrue(classUnderTest.compareError_1(4), "compareError should return 'true'");
-        assertTrue(classUnderTest.compareError_1(5), "compareError should return 'true'");
-        fail();
+    @Test void compareError() {
+        // Asserts with inputs 1-4 will pass by returning true
+        // Assert with input 5 will fail by returning false
+        Complex classUnderTest = new Complex();
+        assertTrue(classUnderTest.compareError(1), "compareError should return 'true'");
+        assertTrue(classUnderTest.compareError(2), "compareError should return 'true'");
+        assertTrue(classUnderTest.compareError(3), "compareError should return 'true'");
+        assertTrue(classUnderTest.compareError(4), "compareError should return 'true'");
+        assertTrue(classUnderTest.compareError(5), "compareError should return 'true'");
     }
-    @Test void arithmeticError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.arithmeticError_1(1), "arithmeticError should return 'true'");
-        assertTrue(classUnderTest.arithmeticError_1(2), "arithmeticError should return 'true'");
-        assertTrue(classUnderTest.arithmeticError_1(3), "arithmeticError should return 'true'");
-        assertTrue(classUnderTest.arithmeticError_1(4), "arithmeticError should return 'true'");
-        fail();
+    @Test void arithmeticError() {
+        // Assert with input 4 will pass by returning true
+        // Asserts with inputs 1-3 will fail by returning fail
+        Complex classUnderTest = new Complex();
+        assertTrue(classUnderTest.arithmeticError(1), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError(2), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError(3), "arithmeticError should return 'true'");
+        assertTrue(classUnderTest.arithmeticError(4), "arithmeticError should return 'true'");
     }
-    @Test void bitwiseError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.bitwiseError_1(1), "boolError should return 'true'");
-        assertTrue(classUnderTest.bitwiseError_1(2), "boolError should return 'true'");
-        assertTrue(classUnderTest.bitwiseError_1(3), "boolError should return 'true'");
-        fail();
+    @Test void bitwiseError() {
+        // Asserts with inputs 1-2 will pass by returning true
+        // Assert with input 3 will fail by returning fail
+        Complex classUnderTest = new Complex();
+        assertTrue(classUnderTest.bitwiseError(1), "boolError should return 'true'");
+        assertTrue(classUnderTest.bitwiseError(2), "boolError should return 'true'");
+        assertTrue(classUnderTest.bitwiseError(3), "boolError should return 'true'");
     }
-    @Test void negationError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.negationError_1(1), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(2), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(3), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(4), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(5), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(6), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(7), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(8), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError_1(9), "deleteLineError should return 'true'");
-        fail();
+    @Test void negationError() {
+        Complex classUnderTest = new Complex();
+        assertTrue(classUnderTest.negationError(1), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(2), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(3), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(4), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(5), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(6), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(7), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(8), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(9), "deleteLineError should return 'true'");
     }
-    @Test void deleteLineError_1() {
-        LibraryComplex classUnderTest = new LibraryComplex();
-        assertTrue(classUnderTest.deleteLineError_1(1), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.deleteLineError_1(2), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.deleteLineError_1(3), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.deleteLineError_1(4), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.deleteLineError_1(5), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.deleteLineError_1(6), "deleteLineError should return 'true'");
-        fail();
+    @Test void deleteLineError() {
+        Complex classUnderTest = new Complex();
+        assertTrue(classUnderTest.deleteLineError(1), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError(2), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError(3), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError(4), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError(5), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.deleteLineError(6), "deleteLineError should return 'true'");
     }
 
 }

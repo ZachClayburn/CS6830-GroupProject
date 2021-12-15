@@ -7,26 +7,31 @@ package testApplication;
 
 public class LibraryComplex {
 
-    public String nullError_1(Integer number) {
+    // One point of failure
+    public String nullError(Integer number) {
+        // Only one test for this function
+
         // The solution should be the following:
         // String success = new String();
         // if (number != number){
         //    success = number.toString();
         // }
+        // BUG ON NEXT LINE
         String success = number.toString();
         return success;
     }
 
-    public boolean compareError_1(int t) {
-        // This function is contrived to fail whenever t%5 == 0.
-        // There are 5 tests in LibraryTestComplex
+    // One point of failure
+    public boolean compareError(int t) {
+        // There are 5 tests
+        // 1 test is contrived to fail whenever t%5 == 0.
         t = t % 5;
         int a = 3;
         int b = 4;
         boolean c = false;
-
         if (t == 0){
             // could be a <= b or a < b
+            // BUG ON NEXT LINE
             c = a > b;
         }
         else if (t == 1){
@@ -44,14 +49,17 @@ public class LibraryComplex {
         return c;
     }
 
-    public boolean arithmeticError_1(int t) {
-        // This test will fail if t%4 != 0
+    // Multiple points of failure
+    public boolean arithmeticError(int t) {
+        // There are 4 tests
+        // 3 tests will fail if t%4 != 0
         t = t % 4;
         int a = 13;
         int b = 7;
         int c = 0;
         if (t == 0){
             // should be a * b
+            // BUG ON NEXT LINE
             c = a - b;
         }
         else if (t == 1){
@@ -59,22 +67,28 @@ public class LibraryComplex {
         }
         else if (t == 2){
             // should be a * b
+            // BUG ON NEXT LINE
             c = a / b;
         }
         else if (t == 3){
             // should be a * b
+            // BUG ON NEXT LINE
             c = a + b;
         }
         return c == 91;
     }
 
-    public boolean bitwiseError_1(int t) {
+    // Single point of failure
+    public boolean bitwiseError(int t) {
+        // There are 3 tests
+        // 1 test will fail if t % 3 == 0
         t = t % 3;
         int a = 5;
         int b = 3;
         int c = 0;
         if (t == 0){
             // should be a | b
+            // BUG ON NEXT LINE
             c = (a & b);
         }
         else if (t == 1){
@@ -88,7 +102,14 @@ public class LibraryComplex {
         return c == 7;
     }
 
-    public boolean negationError_1(int t){
+    // Single point of failure where wrong fix reduces number of failures by about half
+    public boolean negationError(int t){
+        // There are 9 tests
+        // If the correct fix is made by changing "if(x)..." to "if(!x)..."
+        // ...then all the tests should work.  Otherwise all fail.
+        // If incorrect fix is made by changing "if(d)..." to "if(!d)..."
+        // ...then all inputs with even values will fail
+
         // fluff code
         int a = t % 9;
         int b = 11;
@@ -98,13 +119,15 @@ public class LibraryComplex {
             String s = "This line should never run...";
         }
         // Fix below
-        int d = c % 2;
+        int d = (c % 2) == 0 ? false : true;
         boolean x = false;
+        // BUG ON NEXT LINE
         if (x){
             // should be  !x.  The above line is the correct place to fix
             return true;
         }
-        else if (d != 0) {
+        // Fake BUG
+        else if (d) {
             // !d is an incorrect fix.  Sometimes it will pass tests and sometimes fail
             return true;
         }
@@ -113,7 +136,8 @@ public class LibraryComplex {
         }
     }
 
-    public boolean deleteLineError_1(int t) {
+    // Single point of failure
+    public boolean deleteLineError(int t) {
         t = t % 6;
         int a = 2;
         int b = 3;
@@ -121,10 +145,11 @@ public class LibraryComplex {
         int d;
         if ( t == 0){
             // Should delete next line
+            // BUG ON NEXT LINE
             c += a + b;
             return c == 5;
         }
-        // other false lines that if deleted don't fix code
+        // other NOT BUG lines that if deleted don't fix code
         else if ( t == 1 ){
             d = a + b;
             return c == 5;
@@ -145,7 +170,7 @@ public class LibraryComplex {
             d = a - b;
             return c == 5;
         }
-        return false; // No idea what was supposed to be returned here, but it cannot reach the end of the function without a return
+        return false;
     }
 
 }
