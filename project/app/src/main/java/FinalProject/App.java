@@ -8,23 +8,21 @@ import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
 import FinalProject.patcher.IFixTemplate;
-import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.stmt.Statement;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
+    final File modifiedFile;
     final TarantulaFaultLocalizer tarantulaFaultLocalizer;
     final SourceSet sourceSet;
     String testName = null;
@@ -32,6 +30,8 @@ public class App implements Closeable {
 
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
+        modifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple.java")
+                            .toFile();
         tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
 
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
@@ -39,8 +39,41 @@ public class App implements Closeable {
         sourceSet = SourceSet.fromProjectDirectory(projectRoot.toPath());
     }
 
+    List<File> testFilePlaceHolder() {
+        return new ArrayList<>();
+    }
+
+    long oraclePlaceholder(File f) {
+        return 0;
+    }
+
+    String testClassPlaceHolder(File f) {
+        return "";
+    }
+
+    void diffPrinterPlaceholder() {}
+
     void run() {
         commandRunner.runBuild();
+        try {
+            for (File file : testFilePlaceHolder()) {
+                var lineNumber = oraclePlaceholder(file);
+                var testClassName = testClassPlaceHolder(file);
+                var node = LineASTHelper.getLineAST(modifiedFile, lineNumber);
+                for (IFixTemplate template : fixTemplates) {
+                    if (!template.checkNode(node)) continue;
+                    var changedNodes = template.applyPatch(node);
+                    LineASTHelper.writeASTLinesToFile(modifiedFile, changedNodes, lineNumber);
+                    if (commandRunner.runBuild() && commandRunner.runSpecificTest(testClassName)) {
+                        diffPrinterPlaceholder();
+                        break;
+                    }
+                }
+            }
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            System.exit(1);
+        }
 //        try {
 //            var x = LineASTHelper.getLineAST(new File(""), 34);
 //            ArrayList<Statement> statements = new ArrayList<>();
@@ -54,32 +87,32 @@ public class App implements Closeable {
 //        }
     }
 
-    boolean tryNode(Node node, File fileName) {
-        for (IFixTemplate template : fixTemplates) {
-            var fix = template.generateFixes(node, fileName);
-            if (fix == null) continue;
-            try {
-                fix.writeBackFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            // build failed, not a valid patch
-            if (!commandRunner.runBuild()) continue;
-            var testResults = testName == null ? commandRunner.runTests() : commandRunner.runSpecificTest(testName);
-            if (testResults) return true;
-        }
-        return false;
-    }
+//    boolean tryNode(Node node, File fileName) {
+//        for (IFixTemplate template : fixTemplates) {
+//            var fix = template.generateFixes(node, fileName);
+//            if (fix == null) continue;
+//            try {
+//                fix.writeBackFile();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            // build failed, not a valid patch
+//            if (!commandRunner.runBuild()) continue;
+//            var testResults = testName == null ? commandRunner.runTests() : commandRunner.runSpecificTest(testName);
+//            if (testResults) return true;
+//        }
+//        return false;
+//    }
 
-    void run(File filePath) throws FileNotFoundException {
-        var optFixFile = sourceSet.get(filePath);
-        if (optFixFile.isEmpty()) {
-            throw new FileNotFoundException("Cannot find " + filePath);
-        }
-        var fixFile = optFixFile.get();
-        var fileContents = fixFile.getFileContents();
-        fileContents.stream().map(node -> tryNode(node, filePath)).filter(n -> n).findFirst();
-    }
+//    void run(File filePath) throws FileNotFoundException {
+//        var optFixFile = sourceSet.get(filePath);
+//        if (optFixFile.isEmpty()) {
+//            throw new FileNotFoundException("Cannot find " + filePath);
+//        }
+//        var fixFile = optFixFile.get();
+//        var fileContents = fixFile.getFileContents();
+//        fileContents.stream().map(node -> tryNode(node, filePath)).filter(n -> n).findFirst();
+//    }
 
     @Override
     public void close() throws IOException {
@@ -100,12 +133,10 @@ public class App implements Closeable {
         parser.addArgument("--fix-file").type(Arguments.fileType().verifyIsFile());
         parser.addArgument("--test-name");
         File testProjectDir = null;
-        File testFile = null;
         String testName = null;
         try {
             var res = parser.parseArgs(args);
             testProjectDir = res.get("ProjectDir");
-            testFile = res.get("fix_file");
             testName = res.get("test_name");
         } catch (ArgumentParserException e) {
             parser.handleError(e);
@@ -113,8 +144,7 @@ public class App implements Closeable {
 
         try (var app = new App(testProjectDir)) {
             app.setTestName(testName);
-            if (testFile == null) app.run();
-            else app.run(testFile);
+            app.run();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

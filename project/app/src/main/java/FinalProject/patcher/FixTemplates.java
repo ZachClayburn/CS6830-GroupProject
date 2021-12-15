@@ -28,7 +28,6 @@ public class FixTemplates {
         patchList.add(new BinaryOperatorSwap(BinaryExpr.Operator.DIVIDE));
         patchList.add(new BinaryOperatorSwap(BinaryExpr.Operator.REMAINDER));
         patchList.add(new StatementRemover());
-        patchList.add(new ConditionNegator());
         return patchList;
     }
 }

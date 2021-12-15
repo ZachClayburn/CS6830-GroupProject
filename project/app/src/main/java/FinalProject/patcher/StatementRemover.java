@@ -3,6 +3,9 @@ package FinalProject.patcher;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.stmt.Statement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StatementRemover implements IFixTemplate {
     @Override
     public boolean checkNode(Node nodeToCheck) {
@@ -10,7 +13,7 @@ public class StatementRemover implements IFixTemplate {
     }
 
     @Override
-    public void applyPatch(Node patchLocation) {
-        patchLocation.remove();
+    public List<Statement> applyPatch(Node patchLocation) {
+        return new ArrayList<>();
     }
 }

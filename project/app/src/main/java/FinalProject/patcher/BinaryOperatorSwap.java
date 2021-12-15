@@ -2,6 +2,10 @@ package FinalProject.patcher;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.Statement;
+
+import java.util.List;
 
 public class BinaryOperatorSwap implements IFixTemplate {
     private final BinaryExpr.Operator targetOperator;
@@ -12,12 +16,18 @@ public class BinaryOperatorSwap implements IFixTemplate {
 
     @Override
     public boolean checkNode(Node nodeToCheck) {
-        return nodeToCheck instanceof BinaryExpr && !((BinaryExpr) nodeToCheck).getOperator().equals(targetOperator);
+        if (!(nodeToCheck instanceof ExpressionStmt)) {
+            return false;
+        }
+        var expression = ((ExpressionStmt) nodeToCheck).getExpression();
+        return expression instanceof BinaryExpr && ((BinaryExpr) expression).getOperator() != targetOperator;
     }
 
     @Override
-    public void applyPatch(Node patchLocation) {
-        var binOpNode = (BinaryExpr) patchLocation;
+    public List<Statement> applyPatch(Node patchLocation) {
+        var expressionStmt = (ExpressionStmt) patchLocation;
+        var binOpNode = (BinaryExpr) expressionStmt.getExpression();
         binOpNode.setOperator(targetOperator);
+        return List.of((Statement) patchLocation);
     }
 }
