@@ -3,6 +3,7 @@ package FinalProject.patcher;
 import FinalProject.files.SourceFile;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
+import com.google.common.collect.MoreCollectors;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -27,13 +28,17 @@ public interface IFixTemplate {
     @Nullable
     default SourceFile generateFixes(Node node, File parentFile) {
         if (!checkNode(node)) return null;
-        var clonedNode = node.clone();
-        var parentNode = clonedNode.findRootNode();
-        if (!(parentNode instanceof CompilationUnit)) {
+        var rootNode = node.findRootNode();
+        if (!(rootNode instanceof CompilationUnit)) {
             throw new IllegalArgumentException("The root not was not a compilation unit!");
         }
-        var parent = (CompilationUnit) parentNode;
-        applyPatch(clonedNode);
-        return new SourceFile(parentFile, parent);
+
+        var clonedRoot = (CompilationUnit) rootNode.clone();
+        var nodeInCloned = clonedRoot.stream()
+                                     .filter(n -> n.equals(node) && n.getRange().equals(node.getRange()))
+                                     .collect(MoreCollectors.onlyElement());
+
+        applyPatch(nodeInCloned);
+        return new SourceFile(parentFile, clonedRoot);
     }
 }
