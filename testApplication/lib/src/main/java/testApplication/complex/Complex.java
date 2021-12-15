@@ -13,7 +13,7 @@ public class Complex {
 
         // The solution should be the following:
         // String success = new String();
-        // if (number != number){
+        // if (number != null){
         //    success = number.toString();
         // }
         // BUG ON NEXT LINE
@@ -75,7 +75,7 @@ public class Complex {
             // BUG ON NEXT LINE
             c = a + b;
         }
-        return c == 91;
+        return (c == 91);
     }
 
     // Single point of failure
@@ -99,7 +99,7 @@ public class Complex {
             c = a | b;
 
         }
-        return c == 7;
+        return (c == 7);
     }
 
     // Single point of failure where wrong fix reduces number of failures by about half
@@ -147,28 +147,28 @@ public class Complex {
             // Should delete next line
             // BUG ON NEXT LINE
             c += a + b;
-            return c == 5;
+            return (c == 5);
         }
         // other NOT BUG lines that if deleted don't fix code
         else if ( t == 1 ){
             d = a + b;
-            return c == 5;
+            return (c == 5);
         }
         else if ( t == 2 ){
             d = a + b;
-            return c == 5;
+            return (c == 5);
         }
         else if ( t == 3 ){
             d = a * b;
-            return c == 5;
+            return (c == 5);
         }
         else if ( t == 4 ){
             d = a / b;
-            return c == 5;
+            return (c == 5);
         }
         else if ( t == 5 ){
             d = a - b;
-            return c == 5;
+            return (c == 5);
         }
         return false;
     }
