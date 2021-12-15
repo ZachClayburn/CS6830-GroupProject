@@ -4,9 +4,10 @@
  *  Ian Rodriguez and Nathanael Smith -- December 13
  */
 
-package testApplication;
+package testApplication.complex;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTestComplex {
@@ -14,8 +15,8 @@ class LibraryTestComplex {
         // The first assert will pass by returning true
         // The second assert will fail by returning false
         Complex classUnderTest = new Complex();
-        assertEquals("3", classUnderTest.nullError(3), "nullError should return 'true'");
-        assertEquals("", classUnderTest.nullError(null), "nullError should return 'true'");
+        assertEquals("3", classUnderTest.nullError(3), "nullError should return '3'");
+        assertEquals("", classUnderTest.nullError(null), "nullError should return ''");
     }
     @Test void compareError() {
         // Asserts with inputs 1-4 will pass by returning true
@@ -46,15 +47,15 @@ class LibraryTestComplex {
     }
     @Test void negationError() {
         Complex classUnderTest = new Complex();
-        assertTrue(classUnderTest.negationError(1), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(2), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(3), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(4), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(5), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(6), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(7), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(8), "deleteLineError should return 'true'");
-        assertTrue(classUnderTest.negationError(9), "deleteLineError should return 'true'");
+        assertTrue(classUnderTest.negationError(1), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(2), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(3), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(4), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(5), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(6), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(7), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(8), "negationError should return 'true'");
+        assertTrue(classUnderTest.negationError(9), "negationError should return 'true'");
     }
     @Test void deleteLineError() {
         Complex classUnderTest = new Complex();
