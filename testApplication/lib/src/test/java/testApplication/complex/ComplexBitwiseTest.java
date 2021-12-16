@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // Single point of failure
-class ComplexTestBitwise {
+class ComplexBitwiseTest {
     // Asserts with inputs 1-2 will pass by returning true
     // Assert with input 3 will fail by returning false
     @Test void bitwiseError_1() {

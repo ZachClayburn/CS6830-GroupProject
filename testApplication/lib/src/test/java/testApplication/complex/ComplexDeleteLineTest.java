@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // Single point of failure
-class ComplexTestDeleteLine {
+class ComplexDeleteLineTest {
     // Asserts with inputs 1-5 will pass by returning true
     // Assert with input 6 will fail by returning false
     @Test void deleteLineError_1() {

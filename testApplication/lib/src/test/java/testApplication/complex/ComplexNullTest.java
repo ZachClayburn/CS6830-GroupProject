@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // One point of failure
-class ComplexTestNull {
+class ComplexNullTest {
     // The first assert will pass by returning true
     // The second assert will fail by returning false
     @Test

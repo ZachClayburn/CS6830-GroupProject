@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // Single point of failure where wrong fix reduces number of failures by about half
-class ComplexTestNegation {
+class ComplexNegationTest {
     // There are 9 tests
     // If the correct fix is made by changing "if(x)..." to "if(!x)..."
     // ...then all the tests should work.  Otherwise all fail.

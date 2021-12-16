@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LibraryTestComplex {
+class LibraryComplexTest {
     @Test void nullError() {
         // The first assert will pass by returning true
         // The second assert will fail by returning false

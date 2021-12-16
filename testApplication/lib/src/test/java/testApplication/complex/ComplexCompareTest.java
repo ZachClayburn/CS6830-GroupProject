@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // One point of failure
-class ComplexTestCompare {
+class ComplexCompareTest {
     // Asserts with inputs 1-4 will pass by returning true
     // Assert with input 5 will fail by returning false
     @Test void compareError_1() {

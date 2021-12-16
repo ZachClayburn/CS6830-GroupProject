@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 // Multiple points of failure
-class ComplexTestArithmetic {
+class ComplexArithmeticTest {
     // Assert with input 4 will pass by returning true
     // Asserts with inputs 1-3 will fail by returning false
     @Test void arithmeticError_1() {
