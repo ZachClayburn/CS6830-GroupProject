@@ -9,6 +9,7 @@ import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
 import FinalProject.patcher.IFixTemplate;
+import com.github.javaparser.ast.stmt.Statement;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -37,8 +38,8 @@ public class App implements Closeable {
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
         this.projectRootDirectory = projectRoot;
-        modifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple.java")
-                .toFile();
+        modifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple", "Simple.java")
+                            .toFile();
         tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
 
         commandRunner.runJar(); // Ensure that the jars exist for the symbol solver to use
@@ -51,8 +52,10 @@ public class App implements Closeable {
         try (Stream<Path> stream = Files.walk(projectRootDirectory.toPath())) {
             List<Path> filePaths = stream.collect(Collectors.toList());
             for (Path filePath : filePaths) {
-                if (filePath.toString().contains(".java") && filePath.toString().contains("Test")
-                        && filePath.toString().contains("Simple")) {
+                if (filePath.toString().contains(".java") &&
+                        filePath.toString().contains("Test") &&
+                        !filePath.toString().contains("Negation") &&
+                        filePath.toString().contains("Simple")) {
                     testPaths.add(filePath);
                 }
             }
@@ -63,7 +66,9 @@ public class App implements Closeable {
         return testPaths;
     }
 
-    void diffPrinterPlaceholder() {
+    void printPatch(long lineNumber, List<Statement> statements, String testClassName) {
+        System.out.printf("To fix %s, replace line %d with:\n", testClassName, lineNumber);
+        System.out.println(statements);
     }
 
     void run() {
@@ -75,13 +80,16 @@ public class App implements Closeable {
                 String testClassName = file.getName().replace(".java", "");
                 var node = LineASTHelper.getLineAST(modifiedFile, lineNumber);
                 for (IFixTemplate template : fixTemplates) {
-                    if (!template.checkNode(node)) continue;
-                    var changedNodes = template.applyPatch(node);
+                    var nodeToChange = node.clone();
+                    if (!template.checkNode(nodeToChange)) continue;
+                    var changedNodes = template.applyPatch(nodeToChange);
                     LineASTHelper.writeASTLinesToFile(modifiedFile, changedNodes, lineNumber);
                     if (commandRunner.runBuild() && commandRunner.runSpecificTest(testClassName)) {
-                        diffPrinterPlaceholder();
+                        printPatch(lineNumber, changedNodes, testClassName);
+                        sourceSet.restoreToDefault();
                         break;
                     }
+                    sourceSet.restoreToDefault();
                 }
             }
         } catch (IOException ioException) {
@@ -140,10 +148,10 @@ public class App implements Closeable {
     public static void main(String[] args) {
         var parser = ArgumentParsers.newFor("Par").build().description("Automatic program repair");
         parser.addArgument("ProjectDir")
-                .required(true)
-                .type(Arguments.fileType().verifyIsDirectory())
-                .help("Root directory of the project to apply automatic an automatic repair")
-                .metavar("<Project root>");
+              .required(true)
+              .type(Arguments.fileType().verifyIsDirectory())
+              .help("Root directory of the project to apply automatic an automatic repair")
+              .metavar("<Project root>");
         parser.addArgument("--fix-file").type(Arguments.fileType().verifyIsFile());
         parser.addArgument("--test-name");
         File testProjectDir = null;
@@ -154,6 +162,7 @@ public class App implements Closeable {
             testName = res.get("test_name");
         } catch (ArgumentParserException e) {
             parser.handleError(e);
+            System.exit(-1);
         }
 
         try (var app = new App(testProjectDir)) {

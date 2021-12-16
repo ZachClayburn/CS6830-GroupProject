@@ -9,24 +9,25 @@ import java.util.List;
 
 public class BinaryOperatorSwap implements IFixTemplate {
     private final BinaryExpr.Operator targetOperator;
+    private final List<BinaryExpr.Operator> candidates;
 
-    BinaryOperatorSwap(BinaryExpr.Operator targetOperator) {
+    BinaryOperatorSwap(BinaryExpr.Operator targetOperator, List<BinaryExpr.Operator> candidates) {
         this.targetOperator = targetOperator;
+        this.candidates = candidates;
     }
 
     @Override
     public boolean checkNode(Node nodeToCheck) {
-        if (!(nodeToCheck instanceof ExpressionStmt)) {
-            return false;
-        }
-        var expression = ((ExpressionStmt) nodeToCheck).getExpression();
-        return expression instanceof BinaryExpr && ((BinaryExpr) expression).getOperator() != targetOperator;
+        var optBinaryExpr = nodeToCheck.findFirst(BinaryExpr.class);
+        if (optBinaryExpr.isEmpty()) return false;
+        var expression = optBinaryExpr.get();
+        return expression.getOperator() != targetOperator && candidates.contains(expression.getOperator());
     }
 
     @Override
     public List<Statement> applyPatch(Node patchLocation) {
-        var expressionStmt = (ExpressionStmt) patchLocation;
-        var binOpNode = (BinaryExpr) expressionStmt.getExpression();
+        var optBinaryExpr = patchLocation.findFirst(BinaryExpr.class);
+        var binOpNode = optBinaryExpr.get();
         binOpNode.setOperator(targetOperator);
         return List.of((Statement) patchLocation);
     }

@@ -24,7 +24,7 @@ public class CommandRunner {
     }
 
     public boolean runBuild() {
-        return runCommands("build");
+        return runCommands("compileJava");
     }
 
     public boolean runJar() {
@@ -62,7 +62,7 @@ public class CommandRunner {
             }
             process.waitFor();
             if (process.exitValue() != 0) {
-                System.out.println(strBuilder);
+//                System.out.println(strBuilder);
                 return false;
             }
             return true;
