@@ -3,12 +3,16 @@
  */
 package FinalProject;
 
+import FinalProject.ast.helpers.CompilationUnitHelper;
 import FinalProject.ast.helpers.LineASTHelper;
-import FinalProject.oracle.fault.localizer.OracleFaultLocalizer;
-import FinalProject.tarantula.fault.localizer.TarantulaFaultLocalizer;
+import FinalProject.fault.localizer.Line;
+import FinalProject.fault.localizer.oracle.OracleFaultLocalizer;
+import FinalProject.fault.localizer.tarantula.TarantulaFaultLocalizer;
 import FinalProject.files.SourceSet;
 import FinalProject.patcher.FixTemplates;
 import FinalProject.patcher.IFixTemplate;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.stmt.Statement;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -28,7 +32,7 @@ import java.util.stream.Stream;
 
 public class App implements Closeable {
     final CommandRunner commandRunner;
-    final File modifiedFile;
+    final File simpleModifiedFile;
     final File projectRootDirectory;
     final TarantulaFaultLocalizer tarantulaFaultLocalizer;
     final SourceSet sourceSet;
@@ -38,7 +42,7 @@ public class App implements Closeable {
     App(File projectRoot) throws IOException {
         commandRunner = new CommandRunner(projectRoot);
         this.projectRootDirectory = projectRoot;
-        modifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple", "Simple.java")
+        simpleModifiedFile = Paths.get(projectRoot.toString(), "lib", "src", "main", "java", "testApplication", "simple", "Simple.java")
                             .toFile();
         tarantulaFaultLocalizer = new TarantulaFaultLocalizer(projectRoot, commandRunner);
 
@@ -54,7 +58,6 @@ public class App implements Closeable {
             for (Path filePath : filePaths) {
                 if (filePath.toString().contains(".java") &&
                         filePath.toString().contains("Test") &&
-                        !filePath.toString().contains("Negation") &&
                         filePath.toString().contains("Simple")) {
                     testPaths.add(filePath);
                 }
@@ -66,9 +69,9 @@ public class App implements Closeable {
         return testPaths;
     }
 
-    void printPatch(long lineNumber, List<Statement> statements, String testClassName) {
+    void printPatch(long lineNumber, List<Node> nodes, String testClassName) {
         System.out.printf("To fix %s, replace line %d with:\n", testClassName, lineNumber);
-        System.out.println(statements);
+        System.out.println(nodes);
     }
 
     void run() {
@@ -76,20 +79,39 @@ public class App implements Closeable {
         try {
             for (Path path : getSimpleTestPaths()) {
                 File file = path.toFile();
-                long lineNumber = OracleFaultLocalizer.localizeFaults(file);
-                String testClassName = file.getName().replace(".java", "");
-                var node = LineASTHelper.getLineAST(modifiedFile, lineNumber);
+                Line line = OracleFaultLocalizer.localizeFaults(file);
+                boolean foundAFix = false;
+
                 for (IFixTemplate template : fixTemplates) {
-                    var nodeToChange = node.clone();
-                    if (!template.checkNode(nodeToChange)) continue;
-                    var changedNodes = template.applyPatch(nodeToChange);
-                    LineASTHelper.writeASTLinesToFile(modifiedFile, changedNodes, lineNumber);
+                    CompilationUnit cu = CompilationUnitHelper.createCompilationUnit(simpleModifiedFile.getAbsolutePath());
+                    if (cu == null) {
+                        System.err.println("Could not create compilationunit for source file");
+                        System.exit(1);
+                    }
+                    String testClassName = file.getName().replace(".java", "");
+                    var node = LineASTHelper.getLineAST(cu, (int)line.lineNumber);
+
+                    if (node == null) {
+                        System.err.println("Could not find AST for node for line number " + (int)line.lineNumber);
+                        System.exit(1);
+                    }
+
+                    if (!template.checkNode(node)) continue;
+                    var changedNodes = template.applyPatch(node);
+                    int numberLinesToDelete = node.getRange().get().getLineCount();
+                    LineASTHelper.writeASTLinesToFile(simpleModifiedFile, changedNodes, (long)line.lineNumber, numberLinesToDelete);
+
                     if (commandRunner.runBuild() && commandRunner.runSpecificTest(testClassName)) {
-                        printPatch(lineNumber, changedNodes, testClassName);
+                        printPatch((int)line.lineNumber, changedNodes, testClassName);
                         sourceSet.restoreToDefault();
+                        foundAFix = true;
                         break;
                     }
                     sourceSet.restoreToDefault();
+                }
+
+                if (!foundAFix) {
+                    System.out.println("Could not fix error for file " + file.getAbsolutePath());
                 }
             }
         } catch (IOException ioException) {

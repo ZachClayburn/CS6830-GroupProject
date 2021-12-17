@@ -1,14 +1,14 @@
-package FinalProject.tarantula.fault.localizer;
+package FinalProject.fault.localizer.tarantula;
 
 import FinalProject.CommandRunner;
+import FinalProject.ast.helpers.CompilationUnitHelper;
 import FinalProject.exceptions.FaultLocalizationException;
-import FinalProject.tarantula.fault.localizer.coverage.CoverageLine;
-import FinalProject.tarantula.fault.localizer.jacoco.dto.JacocoLine;
-import FinalProject.tarantula.fault.localizer.jacoco.dto.JacocoPackage;
-import FinalProject.tarantula.fault.localizer.jacoco.dto.JacocoReport;
-import FinalProject.tarantula.fault.localizer.jacoco.dto.JacocoSourceFile;
+import FinalProject.fault.localizer.tarantula.coverage.CoverageLine;
+import FinalProject.fault.localizer.tarantula.jacoco.dto.JacocoLine;
+import FinalProject.fault.localizer.tarantula.jacoco.dto.JacocoPackage;
+import FinalProject.fault.localizer.tarantula.jacoco.dto.JacocoReport;
+import FinalProject.fault.localizer.tarantula.jacoco.dto.JacocoSourceFile;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -19,8 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,33 +52,6 @@ public class TarantulaFaultLocalizer {
             ioException.printStackTrace();
             System.exit(1);
         }
-    }
-
-    private CompilationUnit createCompilationUnit(String fullPath) {
-        FileInputStream in;
-        CompilationUnit cu = null;
-
-        try {
-            in = new FileInputStream(fullPath);
-        } catch (FileNotFoundException fex) {
-            fex.printStackTrace();
-            return null;
-        }
-
-        try {
-            // parse the file
-            cu = StaticJavaParser.parse(in);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return cu;
     }
 
     private static String inputStreamToString(InputStream is) throws IOException {
@@ -138,10 +109,12 @@ public class TarantulaFaultLocalizer {
 
                             if (foundCoverageLine == null) {
                                 if (testPassed) {
-                                    foundCoverageLine = new CoverageLine(Double.parseDouble(line.lineNumber),
+                                    foundCoverageLine = new CoverageLine(sourceFile.name,
+                                            Double.parseDouble(line.lineNumber),
                                             1, 0);
                                 } else {
-                                    foundCoverageLine = new CoverageLine(Double.parseDouble(line.lineNumber),
+                                    foundCoverageLine = new CoverageLine(sourceFile.name,
+                                            Double.parseDouble(line.lineNumber),
                                             0, 1);
                                 }
 
@@ -167,7 +140,7 @@ public class TarantulaFaultLocalizer {
 
     public List<CoverageLine> localizeFaults() throws FaultLocalizationException {
         for (Path testPath : testPaths) {
-            CompilationUnit cu = createCompilationUnit(testPath.toString());
+            CompilationUnit cu = CompilationUnitHelper.createCompilationUnit(testPath.toString());
 
             if (cu == null) {
                 throw new FaultLocalizationException("Error: could not create compilation unit for given test class file");

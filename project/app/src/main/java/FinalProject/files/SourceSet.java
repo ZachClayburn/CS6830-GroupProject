@@ -13,6 +13,8 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A collection of source files to mutate. This class manages all the source files in a project that the APR algorithm
@@ -24,16 +26,23 @@ public class SourceSet implements Closeable {
     private final List<UnalteredFile> sourceFiles = new ArrayList<>();
 
     public static SourceSet fromProjectDirectory(Path projectRoot) throws IOException {
-        final var temp = "glob:" + projectRoot + "/**/src/main/**/*.java";
-        final var matcher = FileSystems.getDefault().getPathMatcher(temp);
-        final var files = Files
-                .find(projectRoot, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path))
-                .map(Path::toFile)
-                .toArray(File[]::new);
+        ArrayList<File> files = new ArrayList<>();
+        try (Stream<Path> stream = Files.walk(projectRoot)) {
+            List<Path> filePaths = stream.collect(Collectors.toList());
+            for (Path filePath : filePaths) {
+                if (filePath.toString().contains(".java") &&
+                        !filePath.toString().contains("Test")) {
+                    files.add(filePath.toFile());
+                }
+            }
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            System.exit(1);
+        }
         return new SourceSet(files);
     }
 
-    private SourceSet(File... sourceFiles) throws IOException {
+    private SourceSet(List<File> sourceFiles) throws IOException {
         for (File sourceFile : sourceFiles) this.sourceFiles.add(new UnalteredFile(sourceFile));
     }
 

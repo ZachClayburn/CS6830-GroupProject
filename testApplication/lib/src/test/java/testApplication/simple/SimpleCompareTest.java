@@ -9,7 +9,6 @@ class SimpleCompareTest {
         Simple classUnderTest = new Simple();
         assertTrue(classUnderTest.compareError(), "compareError should return 'true'");
     }
-
 }
 
 

@@ -26,5 +26,5 @@ public interface IFixTemplate {
      * @param patchLocation The Node that has been verified to be a proper candidate for the fix template
      * @return a list of the nodes to replace the provided node
      */
-    List<Statement> applyPatch(Node patchLocation);
+    List<Node> applyPatch(Node patchLocation);
 }

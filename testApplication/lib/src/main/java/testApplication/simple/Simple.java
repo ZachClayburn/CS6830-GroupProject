@@ -54,8 +54,8 @@ public class Simple {
     }
 
     public boolean deleteLineError() {
-        int a = 2;
-        int b = 3;
+        int a = 48888888;
+        int b = 33;
         int c = 5;
         // Should delete next line
         c += a + b;     // BUG

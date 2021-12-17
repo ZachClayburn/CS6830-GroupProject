@@ -20,7 +20,7 @@ public class NullFix implements IFixTemplate {
     }
 
     @Override
-    public List<Statement> applyPatch(Node patchLocation) {
+    public List<Node> applyPatch(Node patchLocation) {
         var expressionStatement = (ExpressionStmt) patchLocation;
         var variableDeclaration = (VariableDeclarationExpr) expressionStatement.getExpression();
         var variable = variableDeclaration.getVariables().get(0);
@@ -31,7 +31,7 @@ public class NullFix implements IFixTemplate {
         var newIf = new IfStmt();
         var condition = scope.orElse(initializer);
         newIf.setCondition(new BinaryExpr(condition, new NullLiteralExpr(), BinaryExpr.Operator.NOT_EQUALS));
-        newIf.setThenStmt(new ExpressionStmt(initializer));
+        newIf.setThenStmt(StaticJavaParser.parseStatement(variable + ";"));
         var newVariableDeclaration = StaticJavaParser.parseStatement("%s %s = new %s();".formatted(type.toString(), name.toString(), type.toString()));
         return List.of(newVariableDeclaration, newIf);
     }

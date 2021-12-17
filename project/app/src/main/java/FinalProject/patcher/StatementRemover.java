@@ -13,7 +13,7 @@ public class StatementRemover implements IFixTemplate {
     }
 
     @Override
-    public List<Statement> applyPatch(Node patchLocation) {
+    public List<Node> applyPatch(Node patchLocation) {
         return new ArrayList<>();
     }
 }

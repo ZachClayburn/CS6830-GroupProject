@@ -1,4 +1,4 @@
-package FinalProject.tarantula.fault.localizer.jacoco.dto;
+package FinalProject.fault.localizer.tarantula.jacoco.dto;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

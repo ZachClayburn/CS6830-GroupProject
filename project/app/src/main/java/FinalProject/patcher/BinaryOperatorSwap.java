@@ -25,10 +25,10 @@ public class BinaryOperatorSwap implements IFixTemplate {
     }
 
     @Override
-    public List<Statement> applyPatch(Node patchLocation) {
+    public List<Node> applyPatch(Node patchLocation) {
         var optBinaryExpr = patchLocation.findFirst(BinaryExpr.class);
         var binOpNode = optBinaryExpr.get();
         binOpNode.setOperator(targetOperator);
-        return List.of((Statement) patchLocation);
+        return List.of((Node) patchLocation);
     }
 }
